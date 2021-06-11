@@ -1,7 +1,6 @@
 const _slugify = require('./helpers/slugify')
 
 module.exports = {
-
   seo: {
     useUrlDispatcher: JSON.parse(process.env.SEO_USE_URL_DISPATCHER || true),
     productUrlPathMapper: (product) => {
@@ -19,15 +18,53 @@ module.exports = {
         destPath = (product.slug ? product.slug : _slugify(product.name + '-' + product.id))
       }
       destPath += '.html'
-      console.log('Dest. product path = ', destPath)
-      return destPath
+      var categorySlug = product.category
+        .filter((c) => !c.slug.includes("default") )
+        .map(( c =>  c.path ))
+        .join("/");
+
+      if (categorySlug.indexOf("sunglasses") >= 0) {
+        categorySlug = "sunglasses"
+      }
+      if (categorySlug.indexOf("framewear") >= 0) {
+        categorySlug = "framewear"
+      }
+      console.log("product.cate", JSON.stringify(product.category));
+      console.log('product91111',`[slug:-${product.slug}]`, `[url_key:-${product.url_key}]`, `[path:-${product.url_path}]`, `[category:-${JSON.stringify(categorySlug)}]`)
+      return `${categorySlug}/${product.slug}`
     },
     categoryUrlPathMapper: (category) => {
       const destSlug = (category.url_path ? category.url_path + '/': '') + category.url_key
       console.log('Dest. cat path = ', destSlug)
-      return destSlug
+      return category.url_path
     },
   },
+//   seo: {
+//     useUrlDispatcher: JSON.parse(process.env.SEO_USE_URL_DISPATCHER || true),
+//     productUrlPathMapper: (product) => {
+//       let destPath = ''
+//       if (product.category && product.category.length > 0) {
+//         for (let i = 0; i < product.category.length; i++) {
+//           if (typeof product.category[i].name !== 'undefined') {
+//             const firstValidCat = product.category[i]
+//             destPath = (firstValidCat.path ? (firstValidCat.path) : _slugify(firstValidCat.name)) + '/' + (product.slug ? product.slug : _slugify(product.name + '-' + product.id))
+//             break
+//           }
+//         }
+//       }
+//       if (destPath === '') {
+//         destPath = (product.slug ? product.slug : _slugify(product.name + '-' + product.id))
+//       }
+//       destPath += '.html'
+//       console.log('Dest. product path = ', destPath)
+//       return destPath
+//     },
+//     categoryUrlPathMapper: (category) => {
+//       const destSlug = (category.url_path ? category.url_path + '/': '') + category.url_key
+//       console.log('Dest. cat path = ', destSlug)
+//       return destSlug
+//     },
+//   },
 
   magento: {
     url: process.env.MAGENTO_URL || 'http://magento2.demo-1.divante.pl/rest/',
