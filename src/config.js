@@ -31,7 +31,7 @@ module.exports = {
       }
       console.log("product.cate", JSON.stringify(product.category));
       console.log('product91111',`[slug:-${product.slug}]`, `[url_key:-${product.url_key}]`, `[path:-${product.url_path}]`, `[category:-${JSON.stringify(categorySlug)}]`)
-      return `${categorySlug}/${product.slug}`
+      return `${product.url_key}`
     },
     categoryUrlPathMapper: (category) => {
       const destSlug = (category.url_path ? category.url_path + '/': '') + category.url_key
